@@ -1,0 +1,33 @@
+{
+  "subject": "An elderly Tamil woman with silver hair tied in a loose traditional kondai bun, wearing a muted maroon and mustard-yellow handloom Chettinad cotton Kandangi sari, bending gracefully to draw a geometric pulli kolam on the floor using fine wet rice flour paste",
+  "setting": {
+  "place": "Central open-air pillared courtyard (valavu) of a heritage Chettinad mansion in Kanadukathan, featuring hand-carved Burma teak wooden pillars and glazed Athangudi floral floor tiles",
+  "era": "Contemporary rural heritage",
+  "time_of_day": "Golden hour, late afternoon sun"
+},
+"lighting": "Warm low-angle amber sunlight streaming through carved timber eaves, casting long architectural shadows and highlighting dust motes across the courtyard",
+  "camera": {
+    "shot": "Wide establishing environmental shot",
+    "lens": "35mm prime lens, natural perspective",
+    "angle": "Slight high angle looking down at the courtyard floor and pillars"
+  },
+  "palette": [
+    "Terracotta red",
+    "Mustard yellow",
+    "Teak wood brown",
+    "Muted dawn indigo",
+    "Chalk white"
+  ],
+  "style": "Hyper-realistic cultural documentary photography, authentic textures, filmic depth of field",
+  "aspect_ratio": "16:9",
+  "avoid": [
+    "North Indian lehenga",
+    "glossy Bollywood aesthetics",
+    "plastic decor",
+    "distorted fingers",
+    "generic stock photo look",
+    "modern furniture",
+    "oversaturated HDR",
+    "neon colors"
+  ]
+}

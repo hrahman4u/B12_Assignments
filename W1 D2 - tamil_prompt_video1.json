@@ -1,0 +1,39 @@
+{
+ "subject": "An elderly Tamil woman with silver hair in a kondai bun, wearing a Kandangi cotton sari, steadily releasing rice flour between her fingers to complete a geometric kolam",
+  "setting": {
+    "place": "Central open-air courtyard of a Chettinad mansion with Burma teak pillars and Athangudi tiles",
+    "era": "Contemporary rural heritage",
+    "time_of_day": "Dawn, Margazhi morning"
+  },
+  "lighting": "Soft blue morning light with a subtle warm glow from a brass brass lamp",
+  "camera": {
+    "shot": "Medium shot",
+    "lens": "50mm natural lens",
+    "angle": "Slight low angle"
+  },
+  "motion": {
+    "subject_motion": "Hand glides steadily across the floor drawing a curving line with rice flour; subtle rise and fall of breathing; sari pallu gently rustles in a faint morning breeze",
+    "camera_move": "Slow, cinematic forward dolly push-in toward the hands and floor pattern",
+    "duration_seconds": 5
+  },
+  "style": "Documentary realism, cinematic 24fps film motion",
+  "aspect_ratio": "16:9",
+  "avoid": [
+    "abrupt morphing",
+    "unnatural hand movements",
+    "fast camera pans",
+    "glitchy floor patterns"
+  ],
+  "palette": [
+    "Terracotta red",
+    "Mustard yellow",
+    "Teak wood brown",
+    "Muted dawn indigo",
+    "Chalk white"
+  ],
+    "sound": {
+        "ambient": "subrabatham",
+        "foley": "Gentle rustle of sari fabric, faint scraping of rice flour on tile"
+    }
+    
+}
