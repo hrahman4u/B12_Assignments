@@ -1,0 +1,10 @@
+langchain
+langchain-openai
+langchain-neo4j
+langchain-core
+neo4j
+python-dotenv
+requests
+beautifulsoup4
+streamlit
+certifi
