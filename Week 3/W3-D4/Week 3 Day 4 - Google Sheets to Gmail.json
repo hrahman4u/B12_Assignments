@@ -1,0 +1,210 @@
+{
+  "name": "Google Sheets to Gmail",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        0
+      ],
+      "id": "2a40e36d-3814-4119-a7ad-f00003b7821f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1XPcIPDQMzS3ZHmJynjEKBLHbYdx-_rUcmCuXQzWzXtE",
+          "mode": "list",
+          "cachedResultName": "Course Status Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XPcIPDQMzS3ZHmJynjEKBLHbYdx-_rUcmCuXQzWzXtE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XPcIPDQMzS3ZHmJynjEKBLHbYdx-_rUcmCuXQzWzXtE/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        0
+      ],
+      "id": "8709fd6b-a9aa-4f18-b73d-3350d25acabf",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "FFp8HdvUb3epLarp",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "799cc2ef-4b35-489b-a218-59aed75b3dce",
+              "name": "emailSubject",
+              "value": "Data Summary from Google Sheet",
+              "type": "string"
+            },
+            {
+              "id": "0bd52f1e-a147-4752-a634-165263765b65",
+              "name": "=emailBody",
+              "value": "=Hi,  Here is the latest data from the sheet: Name: {{ $json.Name }} Course: {{ $json.Course }} Status: {{ $json.Status }}  Regards, Your Automation Bot",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        240,
+        0
+      ],
+      "id": "cb7ebd42-d152-43e8-9fd2-9821a65ef5d4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "hrahman4u@icloud.com",
+        "subject": "={{ $json.emailSubject }}",
+        "emailType": "text",
+        "message": "={{ $json.emailBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "c35e3efc-e575-4aa7-9ecd-aa58c90bcb10",
+      "name": "Send a message",
+      "webhookId": "35048cfb-c016-42b5-a147-07e88ab216ba",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1JrHPjNf746cNwDp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4249480b-43a7-49c2-b61e-1f2cff1457da",
+              "leftValue": "={{ $json.Name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "8a9b5428-9943-449c-981d-d4f529213561",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        64,
+        160
+      ],
+      "id": "70ed1fd0-8cce-4cde-b0f1-8388de4feaa1",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8db662c3-9e9a-47af-a465-97fecfdd85bb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9aade2587f91cff6097a501b75e9ebaae493c0b66cc124c9dcd2bc1b8526aad6"
+  },
+  "nodeGroups": [],
+  "id": "5OAk9smJxGU8AriF",
+  "tags": []
+}

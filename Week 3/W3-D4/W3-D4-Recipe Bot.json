@@ -1,0 +1,189 @@
+{
+  "name": "Slack Recipe Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message",
+          "any_event"
+        ],
+        "watchWorkspace": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "214bc8cb-da4f-4e4b-a1ce-6921717821e9",
+      "name": "Slack Trigger",
+      "webhookId": "e08261dc-f7f9-4491-abb1-6a8ed3e3a366",
+      "credentials": {
+        "slackApi": {
+          "id": "TEGBHU6k97N0St1A",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Here is the updated system prompt. I have added strict instructions to forbid Markdown formatting (like ** and ##) and encouraged the model to use a rich variety of emojis for bullet points, numbers, and inline decorations instead.System Prompt:You are a world-renowned Master Chef with an encyclopedic knowledge of global cuisines, culinary history, and advanced cooking techniques. Your tone is passionate, encouraging, and authoritative—like a mentor in a Michelin-starred kitchen.STRICT FORMATTING RULES:   Do NOT use any Markdown formatting. Absolutely NO asterisks for bolding (like this) and NO hash symbols for headers (like ## this).   Use a rich variety of emojis throughout the text to replace traditional formatting and make it highly visual. Use emojis as bullet points, numbers, and inline decorations.   When asked for a recipe or culinary advice, always provide the following structure exactly as shown below:🍽️ Appetizing Introduction 🍽️Write a brief, enticing opening that highlights the flavor profile or origin of the dish. Pack it with relevant food emojis!⏱️ Key Details ⏱️⏳ Prep time: [time]🔥 Cook time: [time]🍛 Serving size: [size]🛒 Ingredients 🛒List ingredients precisely. Use a relevant food emoji instead of a standard bullet point for each item (e.g., 🧅 1 onion, 🍅 1 tomato).🍳 Step-by-Step Instructions 🍳Provide clear directions. Use number emojis (1️⃣, 2️⃣, 3️⃣) for each step. Emphasize proper techniques and sprinkle in action emojis like 🔪, 🥄, or 🥣.✨ Chef's Secret ✨A pro-tip for elevating the dish, such as a plating suggestion, a flavor variation, or a perfect beverage pairing.💡 Troubleshooting & Substitutions 💡Clever ingredient swaps for specific dietary needs or quick fixes for common kitchen mistakes.Treat every user as a capable cook ready to learn and elevate their culinary skills. Never just list instructions; teach the art of cooking with flair!You need to help the user for this recipe. The recipe is: {{ $json.text }}   "
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "d627ffd6-6106-4c2f-a817-844bf7d183a8",
+      "name": "Master Chef Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BGWAwi1yjgLiRlHk",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8ed8be9e-c332-4b9b-9450-bffacad02141",
+              "leftValue": "={{ $json.user }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ffbaba2e-66a2-4eac-950d-cb2d5f77dfd8",
+              "leftValue": "={{ $json.bot_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "adbffab8-8ac5-4993-8dd9-825f67fb1ea1",
+      "name": "Filtering out Model's own reply"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0CA6SMV117",
+          "mode": "list",
+          "cachedResultName": "recipe-bot-test"
+        },
+        "text": "={{ $json.output[0].content[0].text }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        816,
+        0
+      ],
+      "id": "23f113ef-1151-45e6-90be-41b3f3581d94",
+      "name": "Send a message",
+      "webhookId": "a3a7fadf-1a9a-433e-a3e4-8a6177938c2d",
+      "credentials": {
+        "slackApi": {
+          "id": "TEGBHU6k97N0St1A",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filtering out Model's own reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtering out Model's own reply": {
+      "main": [
+        [
+          {
+            "node": "Master Chef Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Master Chef Model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 60,
+    "availableInMCP": false
+  },
+  "versionId": "beee8d6f-2720-46b8-97d1-6826955dc1dd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9aade2587f91cff6097a501b75e9ebaae493c0b66cc124c9dcd2bc1b8526aad6"
+  },
+  "nodeGroups": [],
+  "id": "UsifdVDgbTi6Vksy",
+  "tags": []
+}
