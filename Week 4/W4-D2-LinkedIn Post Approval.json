@@ -1,0 +1,348 @@
+{
+  "name": "LinkedIn Post Approval",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Approval Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Topic"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -736,
+        -144
+      ],
+      "id": "d82748d1-9c6b-49d6-af17-4e78af686327",
+      "name": "On form submission",
+      "webhookId": "b9b8d764-9d7a-4639-b153-02fbd85bfefc"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -640,
+        64
+      ],
+      "id": "69328122-485e-483e-b27f-693420e33029",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BGWAwi1yjgLiRlHk",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        64
+      ],
+      "id": "59a4243d-abce-4095-9246-ba98129804bf",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "BGWAwi1yjgLiRlHk",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a LinkedIn post about: {{ $json.Topic }}\nHook in line one, 120-150 words, one call to action, max 3 hashtags. Return the post only.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -576,
+        -144
+      ],
+      "id": "7e99d84c-005a-451e-b692-2acf0660cf2f",
+      "name": "Writer AI Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Score the post below out of 10 on hook, clarity and CTA, then rewrite its weakest part. Return the final post only.\n{{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -272,
+        -144
+      ],
+      "id": "d3b20345-5f2e-4522-a169-1d98f409f277",
+      "name": "Reviewer AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "hrahman4u@gmail.com",
+        "subject": "LinkedIn Post Approval Request",
+        "message": "={{ $json.output }}",
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeUnit": "days"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        -144
+      ],
+      "id": "3ec81e3b-3c46-4324-9bb2-75d1a68ce821",
+      "name": "Send message and wait for response",
+      "webhookId": "a7db7239-2f13-4787-921c-3a2628783523",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1JrHPjNf746cNwDp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "78871843-3423-44a0-bebb-ad8d46f2e22f",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        -144
+      ],
+      "id": "7409254c-60d2-480c-a88f-f58796f1d5d2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "10awuNx8sRy29MdusHe9eHVLnLbXSszQbQrheR19rkNc",
+          "mode": "list",
+          "cachedResultName": "LinkedIn Post Approval",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10awuNx8sRy29MdusHe9eHVLnLbXSszQbQrheR19rkNc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10awuNx8sRy29MdusHe9eHVLnLbXSszQbQrheR19rkNc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.format('DD') }}",
+            "Topic": "={{ $('On form submission').first().json.Topic }}",
+            "Final Post": "={{ $('Reviewer AI Agent').first().json.output }}",
+            "Status": "=Approved"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Final Post",
+              "displayName": "Final Post",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        -160
+      ],
+      "id": "518c2f9e-0992-4ab9-8b87-a7f37cf04a3a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uV1X4GOOtRF5MrNO",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Writer AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Writer AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Reviewer AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writer AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reviewer AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviewer AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b72cec33-b37f-4022-a9b5-767750f512fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9aade2587f91cff6097a501b75e9ebaae493c0b66cc124c9dcd2bc1b8526aad6"
+  },
+  "nodeGroups": [],
+  "id": "lmCcRZL1PquYC48P",
+  "tags": []
+}
